@@ -1,6 +1,6 @@
 # Northwind Traders: Supply Chain Optimization & Revenue Leakage Analysis
 
-**Live Interactive Dashboard:** [View Executive Dashboard on Tableau Public](https://public.tableau.com/shared/FBBQ9RNJR?:display_count=n&:origin=viz_share_link)
+**Live Interactive Dashboard:** [View Executive Dashboard on Tableau Public](https://public.tableau.com/views/ExecutiveSupplyChainPerformanceDashboard/FinalDashboard?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 
 ### Executive Summary
 This project identifies operational inefficiencies and revenue leakage within Northwind Traders' global supply chain. By auditing over 2,100 shipment records and financial line items, this analysis isolates underperforming logistics providers, pinpoints geographic bottlenecks, and highlights critical product dependencies. The resulting insights provide a data-driven roadmap to reduce freight costs and protect core revenue streams for the upcoming fiscal quarter.
