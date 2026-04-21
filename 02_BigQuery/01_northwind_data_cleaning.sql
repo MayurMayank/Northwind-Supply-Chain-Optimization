@@ -29,5 +29,3 @@ SELECT
         ELSE 'On-Time'
     END AS shippingStatus
 FROM `northwind-supply-chain.northwind_raw.orders`;
-
-
