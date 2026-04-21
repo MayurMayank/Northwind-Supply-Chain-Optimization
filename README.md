@@ -117,7 +117,9 @@ ORDER BY delayPercentage DESC;
 ---
 
 ## Repository Structure
-- `Dataset/`: Raw CSV files and data dictionary.
+- `Dataset/`:
+  - `Raw Data/`: Original 7 CSV files, data dictionary, and source link.
+  - `Processed Data/`: The final, cleaned `master_supply_chain_data.csv` used for visualization.
 - `BigQuery/`: SQL scripts for data cleaning, transformation, and advanced analysis.
 - `Python/`: Jupyter Notebook containing EDA, data validation, and Matplotlib/Seaborn visualizations.
 - `Tableau/`: Dashboard layout images and public workbook links.
