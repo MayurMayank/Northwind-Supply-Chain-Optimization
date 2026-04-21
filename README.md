@@ -5,7 +5,8 @@
 ### Executive Summary
 This project identifies operational inefficiencies and revenue leakage within Northwind Traders' global supply chain. By auditing over 2,100 shipment records and financial line items, this analysis isolates underperforming logistics providers, pinpoints geographic bottlenecks, and highlights critical product dependencies. The resulting insights provide a data-driven roadmap to reduce freight costs and protect core revenue streams for the upcoming fiscal quarter.
 
-  <img width="1920" height="1080" alt="01_Dashboard_Default_View" src="https://github.com/user-attachments/assets/a59f8f59-d906-4156-978b-7b6048320733" />
+<img width="1832" height="733" alt="01-Dashboard_Default_View" src="https://github.com/user-attachments/assets/5581d25c-d4d2-4bc4-8c5c-cb2aa3df8b37" />
+
 
 *(Above: The overarching executive view of Northwind's supply chain performance.)*
 
@@ -55,7 +56,7 @@ FROM `northwind-supply-chain.northwind_raw.orders`;
 ### Assumptions & Caveats
 * **Shipping Status:** Orders with a `NULL` value in the `shippedDate` column were assumed to be "Unshipped" and were excluded from historical delay calculations.
 * **Financial Calculations:** Net Revenue assumes that the `discount` field is applied at the line-item level prior to summing the final order total. 
-* **Data Granularity:** Freight costs are recorded at the `orderID` level. To prevent inflating freight totals during logistics analysis, duplicate line items were dropped using Python (`df.drop_duplicates`) to ensure metrics were calculated strictly on unique invoices.
+* **Data Granularity:** Freight costs are recorded at the `orderID` level. During data validation in Python, duplicate line items revealed a granularity issue in the SQL aggregation. This was used to confirm the presence of order-level duplication, after which the SQL logic was corrected to ensure logistics metrics were calculated strictly on unique invoices.
 
 ---
 
@@ -71,25 +72,32 @@ print(f"Total Unique Orders for Logistics Analysis: {len(df_orders)}")
 ```
 
 ### Q1: Shipping Performance vs. Freight Cost
-<img width="488" height="655" alt="02_Dashboard_Shipper_Cost_vs _Delay_Rate" src="https://github.com/user-attachments/assets/5d413683-fb16-4a49-bf32-bbafccd46f95" />
+<img width="552" height="532" alt="02_Dashboard_Shipper_Cost_vs _Delay_Rate" src="https://github.com/user-attachments/assets/b0599b46-14ea-4675-8a24-8b428b10ac88" />
 
 
-**Insight:** United Package presents a severe operational inefficiency. Despite charging the highest average freight premium ($105.98 per order), they maintain the highest failure rate, responsible for nearly 50% of all delayed orders (4.91% delay rate). Conversely, Federal Shipping offers the most reliable logistics at a lower cost (3.53% delay rate).
+**Insight:** United Package presents a severe operational inefficiency. Despite charging the highest average freight premium ($86.64 per order), they maintain the highest failure rate, responsible for nearly 50% of all delayed orders (4.91% delay rate). Conversely, Federal Shipping offers the most reliable logistics at a lower cost (3.53% delay rate).
 **Recommendation:** Initiate immediate vendor contract renegotiations with United Package. Divert high-priority, high-margin shipping volume to Federal Shipping to optimize delivery SLAs and reduce freight expenditure.
 
 *BigQuery Validation (Distinct Orders):*
 ```sql
+WITH order_level AS (
+  SELECT DISTINCT
+    orderID,
+    shipperName,
+    freight,
+    shippingStatus
+  FROM `northwind-supply-chain.northwind_raw.master_supply_chain_data`
+)
 SELECT
   shipperName,
-  COUNT(DISTINCT orderID) AS totalOrders,
-  COUNT(DISTINCT CASE WHEN shippingStatus = 'Delayed' THEN orderID END) AS delayedOrders,
-  ROUND(COUNT(DISTINCT CASE WHEN shippingStatus = 'Delayed' THEN orderID END) / COUNT(DISTINCT orderID) * 100, 2) AS delayPercentage,
+  COUNT(orderID) AS totalOrders,
+  COUNT(CASE WHEN shippingStatus = 'Delayed' THEN orderID END) AS delayedOrders,
+  ROUND(COUNT(CASE WHEN shippingStatus = 'Delayed' THEN orderID END) * 100.0 / COUNT(orderID), 2) AS delayPercentage,
   ROUND(AVG(freight), 2) AS avgFreightCost
-FROM `northwind-supply-chain.northwind_raw.master_supply_chain_data`
+FROM order_level
 GROUP BY shipperName
 ORDER BY delayPercentage DESC;
 ```
-
 ### Q2: Financial Profitability by Category
 <img width="800" height="536" alt="03_Dashboard_Revenue_by_Category" src="https://github.com/user-attachments/assets/f4d193a2-a360-44b1-b5c2-d2517a22865f" />
 
