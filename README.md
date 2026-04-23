@@ -75,7 +75,7 @@ print(f"Total Unique Orders for Logistics Analysis: {len(df_orders)}")
 <img width="552" height="532" alt="02_Dashboard_Shipper_Cost_vs _Delay_Rate" src="https://github.com/user-attachments/assets/b0599b46-14ea-4675-8a24-8b428b10ac88" />
 
 
-**Insight:** United Package presents a severe operational inefficiency. Despite charging the highest average freight premium ($86.64 per order), they maintain the highest failure rate, responsible for nearly 50% of all delayed orders (4.91% delay rate). Conversely, Federal Shipping offers the most reliable logistics at a lower cost (3.53% delay rate).
+**Insight:** United Package presents the highest logistical risk among active carriers. While their absolute delay rate is 4.91%, they are responsible for nearly half of all delayed volume despite charging the highest average freight premium ($86.64 per order). Conversely, Federal Shipping offers more reliable logistics (3.53% delay rate) at a more efficient cost per order ($80.44).
 **Recommendation:** Initiate immediate vendor contract renegotiations with United Package. Divert high-priority, high-margin shipping volume to Federal Shipping to optimize delivery SLAs and reduce freight expenditure.
 
 *BigQuery Validation (Distinct Orders):*
@@ -128,6 +128,6 @@ ORDER BY delayPercentage DESC;
 - `Dataset/`:
   - `Raw Data/`: Original 7 CSV files, data dictionary, and source link.
   - `Processed Data/`: The final, cleaned `master_supply_chain_data.csv` used for visualization.
-- `BigQuery/`: SQL scripts for data cleaning, transformation, and advanced analysis.
+- `BigQuery/`: SQL scripts for data cleaning, transformation, advanced analysis, and QA data validation.
 - `Python/`: Jupyter Notebook containing EDA, data validation, and Matplotlib/Seaborn visualizations.
 - `Tableau/`: Dashboard layout images and public workbook links.
